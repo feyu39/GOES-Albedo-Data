@@ -8,7 +8,7 @@ HOURS_PER_DAY = 24
 
 def main():
     s3_client = boto3.client('s3')
-    start_date = '09-01-2021'
+    start_date = '10-21-2021'
     end_date = '06-16-2022'
 
     download_files_range(start_date, end_date, s3_client)
