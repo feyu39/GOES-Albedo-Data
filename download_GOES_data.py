@@ -46,8 +46,7 @@ def download_files_range(start_date, end_date, s3_client):
             files = list_files_in_prefix(bucket_name, prefix, s3_client)
 
             # Make directory for day and year to download to
-            local_dir = f'{local_path_dir}/{
-                year}/{day_of_year}'
+            local_dir = f'{local_path_dir}/{year}/{day_of_year}'
             os.makedirs(local_dir, exist_ok=True)
             # Download each file
             for file_name in files:
