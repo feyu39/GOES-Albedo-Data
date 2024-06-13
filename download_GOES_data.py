@@ -8,15 +8,13 @@ HOURS_PER_DAY = 24
 
 def main():
     s3_client = boto3.client('s3')
-    start_date = '11-4-2021'
+    start_date = '12-23-2021'
     end_date = '06-16-2022'
 
     download_files_range(start_date, end_date, s3_client)
 
 
 def download_file(bucket_name, object_to_download, local_path, s3_client):
-    # Make a directory for the file YYYY/DDD if it doesn't exist
-    os.makedirs(os.path.dirname(local_path), exist_ok=True)
     try:
         s3_client.download_file(bucket_name, object_to_download, local_path)
         print(f'Downloaded {object_to_download} to {local_path}')
@@ -46,11 +44,14 @@ def download_files_range(start_date, end_date, s3_client):
             # List files in the bucket + prefix
             files = list_files_in_prefix(bucket_name, prefix, s3_client)
 
+            # Make directory for day and year to download to
+            local_dir = f'{local_path_dir}/{year}/{day_of_year}'
+            os.makedirs(local_dir, exist_ok=True)
             # Download each file
             for file_name in files:
                 # Specify a location path to download the data
                 local_path = os.path.join(
-                    local_dir, file_name)
+                    local_path_dir, file_name)
                 download_file(bucket_name, file_name, local_path, s3_client)
 
 
