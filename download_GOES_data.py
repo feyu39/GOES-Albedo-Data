@@ -15,6 +15,8 @@ def main():
 
 
 def download_file(bucket_name, object_to_download, local_path, s3_client):
+    # Make directory to download to
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
     try:
         s3_client.download_file(bucket_name, object_to_download, local_path)
         print(f'Downloaded {object_to_download} to {local_path}')
@@ -32,6 +34,7 @@ def download_files_range(start_date, end_date, s3_client):
     local_path_dir = '/global/homes/f/feyu39/data'
     base_s3_path = 'ABI-L2-LSAC'
 
+    os.makedirs(local_path_dir, exist_ok=True)
     # For every date within the range, download the data
     for single_date in (start_date_dt + timedelta(n) for n in range(total_days)):
         year = single_date.year
@@ -44,9 +47,6 @@ def download_files_range(start_date, end_date, s3_client):
             # List files in the bucket + prefix
             files = list_files_in_prefix(bucket_name, prefix, s3_client)
 
-            # Make directory for day and year to download to
-            local_dir = f'{local_path_dir}/{year}/{day_of_year}'
-            os.makedirs(local_dir, exist_ok=True)
             # Download each file
             for file_name in files:
                 # Specify a location path to download the data
